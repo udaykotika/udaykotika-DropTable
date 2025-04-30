@@ -17,24 +17,33 @@ import java.sql.Statement;
 public class DropATable {
 
     /**
-     *      Task: Drop the table "song"
-     *      song Table Diagram:
-     *      |      title        |        artist         |
-     *      ---------------------------------------------
-     *      |'Let it be'        |'Beatles'              |
-     *      |'Hotel California' |'Eagles'               |
-     *      |'Kashmir'          |'Led Zeppelin'         |
+     * Task: Drop the table "song"
+     * song Table Diagram:
+     * | title | artist |
+     * ---------------------------------------------
+     * |'Let it be' |'Beatles' |
+     * |'Hotel California' |'Eagles' |
+     * |'Kashmir' |'Led Zeppelin' |
      */
-    public void problem1(){
-        String sql = FileUtil.parseSQLFile("problem1.sql");
-
+    public void problem1() {
+        String sql;
         try {
-            Connection connection = ConnectionUtil.getConnection();
-            Statement s = connection.createStatement();
-            s.executeUpdate(sql);
+            // Read the SQL statement from the file
+            sql = FileUtil.parseSQLFile("problem1.sql");
+        } catch (IOException e) {
+            System.err.println("Failed to read SQL file: " + e.getMessage());
+            return;
+        }
+
+        // Execute the SQL statement
+        try (Connection connection = ConnectionUtil.getConnection();
+                Statement statement = connection.createStatement()) {
+
+            statement.executeUpdate(sql);
+            System.out.println("Table 'song' dropped successfully.");
+
         } catch (SQLException e) {
-            System.out.println("problem1: " + e.getMessage() + '\n');
+            System.err.println("SQL execution failed: " + e.getMessage());
         }
     }
-
 }
